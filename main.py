@@ -6,7 +6,6 @@ from gui import MainWindow
 from PyQt5.QtWidgets import QApplication
 
 
-
 def main():
 
     # Show main window on run    

@@ -27,12 +27,13 @@ def initialize():
     
 def randomize():
     # Decides Latin to Decimal or vice versa
-    random_type = randint(0,100)
+    random_type = randint(0,1)
     
     random_number = randint(0,3999)
-    # < 50 == Decimal to latin Quiz
-    if random_type < 50:
+    # 0 == Requests Decimal to Latin
+    if random_type:
         return str(random_number)
+    # 1 == find out Latin version, request Latin to Decimal
     else: 
         random_latin = dec2lat(random_number)
         return random_latin
