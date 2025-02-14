@@ -1,9 +1,30 @@
+import os 
+import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QLineEdit, 
     QVBoxLayout, QHBoxLayout, QPushButton, QWidget)
 from PyQt5.QtCore import Qt
 from logic import (quiz_streak, randomize, purify_input, lat2dec, 
     dec2lat)
+
+# This function grabs absolute path to where images are saved
+# so that images work for both .py and --onefile .exe executions
+def resource_path(relative_path):
+    # If code is executed through PyInstaller --onefile
+    try:
+        # _MEIPASS is where .exe's files are temporarily 
+        # decompressed during code execution
+        base_path = sys._MEIPASS
+    
+    # This except runs when sys._MEIPASS is not used, 
+    # meaning when code is executed through .py
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    # Returns the path where .py is or where .exe is 
+    # decompressed joined with /L-Icon.png or /arrows.png
+    return os.path.join(base_path, relative_path)
+
 
 class MainWindow(QMainWindow):
     
@@ -13,7 +34,7 @@ class MainWindow(QMainWindow):
         
         # Window Properties
         self.setWindowTitle("Menu")
-        self.setWindowIcon(QIcon('L-Icon.png'))
+        self.setWindowIcon(QIcon(resource_path('L-Icon.png')))
         self.setFixedSize(350,250)
 
         # Menu Title
@@ -73,7 +94,7 @@ class MainWindow(QMainWindow):
         # Translator window
         self.translator_wnd = QWidget()
         self.translator_wnd.setWindowTitle("Translator")
-        self.translator_wnd.setWindowIcon(QIcon('L-Icon.png'))
+        self.translator_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
         self.translator_wnd.setFixedSize(450,235)
         
         # Translate FROM side
@@ -88,7 +109,7 @@ class MainWindow(QMainWindow):
         # Reverse translation BTN
         self.translator_wnd.reverseBTN = QPushButton()
         self.translator_wnd.reverseBTN.setCheckable(True)
-        self.translator_wnd.reverseBTN.setIcon(QIcon("arrows.png"))
+        self.translator_wnd.reverseBTN.setIcon(QIcon(resource_path('arrows.png')))
         self.translator_wnd.reverseBTN.clicked.connect(self.reverse_clicked)
         self.translator_wnd.reverseBTN.setFixedSize(30,30)
         
@@ -213,7 +234,7 @@ class MainWindow(QMainWindow):
         
         # Window Properties
         self.rules_wnd.setWindowTitle("Rules")
-        self.rules_wnd.setWindowIcon(QIcon('L-Icon.png'))
+        self.rules_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
         self.rules_wnd.setFixedSize(555,805)
         
         # Latin title
@@ -335,7 +356,7 @@ M''')
         self.quiz_wnd = QWidget()
         # Window Properties
         self.quiz_wnd.setWindowTitle("Quiz")
-        self.quiz_wnd.setWindowIcon(QIcon('L-Icon.png'))
+        self.quiz_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
         self.quiz_wnd.setFixedSize(355,425)
         
         # Title
