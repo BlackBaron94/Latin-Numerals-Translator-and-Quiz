@@ -2,7 +2,7 @@ import os
 import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QLineEdit, 
-    QVBoxLayout, QHBoxLayout, QPushButton, QWidget)
+    QVBoxLayout, QHBoxLayout, QScrollArea, QPushButton, QWidget)
 from PyQt5.QtCore import Qt
 from logic import (quiz_streak, randomize, purify_input, lat2dec, 
     dec2lat)
@@ -35,7 +35,9 @@ class MainWindow(QMainWindow):
         # Window Properties
         self.setWindowTitle("Menu")
         self.setWindowIcon(QIcon(resource_path('L-Icon.png')))
-        self.setFixedSize(350,250)
+        # Different Height for different window scaling settings
+        self.setMinimumSize(370,240)
+        self.setMaximumSize(370,300)
 
         # Menu Title
         label = QLabel("WELCOME")
@@ -44,6 +46,7 @@ class MainWindow(QMainWindow):
         font.setPointSize(30)
         label.setFont(font)
         label.setAlignment(Qt.AlignCenter)
+        label.setMinimumSize(350,50)
         
         # Buttons
         translatorBTN = QPushButton("Numerals Translator")
@@ -79,7 +82,7 @@ class MainWindow(QMainWindow):
         
         # Modifying and adding buttons
         for btn in allBTNS:
-            btn.setFixedSize(200,35)
+            btn.setFixedWidth(230)
             btn.setFont(font)
             layout.addWidget(btn, alignment=Qt.AlignCenter)
         layout.addWidget(made_by_label, alignment = Qt.AlignRight | Qt.AlignBottom)
@@ -95,7 +98,8 @@ class MainWindow(QMainWindow):
         self.translator_wnd = QWidget()
         self.translator_wnd.setWindowTitle("Translator")
         self.translator_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
-        self.translator_wnd.setFixedSize(450,235)
+        self.translator_wnd.setMinimumSize(450,250)
+        self.translator_wnd.setMaximumSize(600,260)
         
         # Translate FROM side
         self.translator_wnd.entry_title = QLabel("Latin Numeral")
@@ -103,7 +107,7 @@ class MainWindow(QMainWindow):
         font.setFamily("Times New Roman")
         font.setPointSize(16)
         self.translator_wnd.entry_title.setFont(font)
-        self.translator_wnd.entry_title.setFixedSize(150,30)
+        self.translator_wnd.entry_title.setMinimumSize(150,30)
         self.translator_wnd.entry_title.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
         # Reverse translation BTN
@@ -111,12 +115,12 @@ class MainWindow(QMainWindow):
         self.translator_wnd.reverseBTN.setCheckable(True)
         self.translator_wnd.reverseBTN.setIcon(QIcon(resource_path('arrows.png')))
         self.translator_wnd.reverseBTN.clicked.connect(self.reverse_clicked)
-        self.translator_wnd.reverseBTN.setFixedSize(30,30)
+        self.translator_wnd.reverseBTN.setMinimumSize(30,30)
         
         # Translate TO side
         self.translator_wnd.output_title = QLabel("Decimal Number")
         self.translator_wnd.output_title.setFont(font)
-        self.translator_wnd.output_title.setFixedSize(150,30)
+        self.translator_wnd.output_title.setMinimumSize(150,30)
         self.translator_wnd.output_title.setAutoFillBackground(True)
         self.translator_wnd.output_title.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
@@ -132,14 +136,14 @@ class MainWindow(QMainWindow):
         self.translator_wnd.entry = QLineEdit()
         self.translator_wnd.entry.setFont(font)
         self.translator_wnd.entry.setAlignment(Qt.AlignHCenter)
-        self.translator_wnd.entry.setFixedSize(245,30)
+        self.translator_wnd.entry.setMinimumSize(245,30)
         
         # TranslateBTN
         self.translator_wnd.translateBTN = QPushButton("Translate")
         self.translator_wnd.translateBTN.setFont(font)
         self.translator_wnd.translateBTN.setShortcut("Return")
         self.translator_wnd.translateBTN.clicked.connect(self.translate_clicked)
-        self.translator_wnd.translateBTN.setFixedSize(100,30)
+        self.translator_wnd.translateBTN.setMinimumSize(100,30)
         
         # Middle line, field + BTN
         middle_layout = QHBoxLayout()
@@ -152,6 +156,7 @@ class MainWindow(QMainWindow):
         self.translator_wnd.output = QLabel("Type a latin numeral to begin")
         self.translator_wnd.output.setFont(font)
         self.translator_wnd.output.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.translator_wnd.output.setMinimumSize(350,100)
         
         
         # General layout nesting other line layouts
@@ -235,7 +240,7 @@ class MainWindow(QMainWindow):
         # Window Properties
         self.rules_wnd.setWindowTitle("Rules")
         self.rules_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
-        self.rules_wnd.setFixedSize(555,805)
+        self.rules_wnd.setMinimumSize(600,230)
         
         # Latin title
         self.rules_wnd.numerals_title = QLabel('Latin')
@@ -246,10 +251,10 @@ class MainWindow(QMainWindow):
         font.setPointSize(20)
         font.setBold(True)
         self.rules_wnd.numerals_title.setFont(font)
-        
         # Decimal Title
         self.rules_wnd.decimals_title = QLabel('Decimal')
         self.rules_wnd.decimals_title.setFont(font)
+        
         
         # Latin table contents
         self.rules_wnd.numerals_box = QLabel('''I
@@ -281,6 +286,7 @@ M''')
         font.setItalic(True)
         self.rules_wnd.note.setFont(font)
         font.setItalic(False)
+        
         
         # Top part, latin numerals table
         numerals_layout = QVBoxLayout()
@@ -339,16 +345,35 @@ M''')
         rules_layout.addWidget(self.rules_wnd.rules_title)
         rules_layout.addWidget(self.rules_wnd.rules_text)
         
-        # General layout
-        rules_wnd_layout = QVBoxLayout()
-        rules_wnd_layout.addLayout(table_layout)
-        rules_wnd_layout.addWidget(self.rules_wnd.note)
-        rules_wnd_layout.addLayout(rules_layout)
-        rules_wnd_layout.setSpacing(0)
+        # Inner general layout to be scrollable
+        inner_rules_wnd_layout = QVBoxLayout()
+        inner_rules_wnd_layout.addLayout(table_layout)
+        inner_rules_wnd_layout.addWidget(self.rules_wnd.note)
+        inner_rules_wnd_layout.addLayout(rules_layout)
+        inner_rules_wnd_layout.setSpacing(0)
         
-        self.rules_wnd.setLayout(rules_wnd_layout)
-        self.rules_wnd.show()
+        # Widget to contain window layout
+        scroll_widget = QWidget()
+        scroll_widget.setLayout(inner_rules_wnd_layout)
+        
+        # Creating a scroll area
+        scroll_area = QScrollArea(self.rules_wnd)
+        scroll_area.setWidgetResizable(True)
+        # Disabling innate border
+        scroll_area.setStyleSheet('QScrollArea {border: none;}')
+        # Adding widget
+        scroll_area.setWidget(scroll_widget)
+        # A layout for the window with scroll_area as its widget
+        outter_rules_wnd_layout = QVBoxLayout()
+        outter_rules_wnd_layout.addWidget(scroll_area)
+        
     
+        # Setting layout window
+        self.rules_wnd.setLayout(outter_rules_wnd_layout)
+        
+        self.rules_wnd.show()
+        # Needs to update after scroll_area addition
+        self.rules_wnd.numerals_title.updateGeometry()
     
     # Main menu QuizBTN function
     def quizBTN_clicked(self):
@@ -357,7 +382,8 @@ M''')
         # Window Properties
         self.quiz_wnd.setWindowTitle("Quiz")
         self.quiz_wnd.setWindowIcon(QIcon(resource_path('L-Icon.png')))
-        self.quiz_wnd.setFixedSize(355,425)
+        self.quiz_wnd.setMinimumSize(375,400)
+        self.quiz_wnd.setMaximumSize(675,500)
         
         # Title
         self.quiz_wnd.quiz_title = QLabel('Quiz\n')
@@ -380,7 +406,7 @@ M''')
         font.setPointSize(18)
         self.quiz_wnd.question_number.setFont(font)
         self.quiz_wnd.question_number.setAlignment(Qt.AlignCenter)
-        # Calls randomize()
+        # Calls randomize() to get random number
         self.quiz_wnd.question_number.setText(randomize())
         
         # Answer's title label
@@ -417,7 +443,8 @@ M''')
             '''border-color: rgb(170,170,170);
             border-width: 5px; 
             border-style: groove;''')
-
+        self.quiz_wnd.result.setMinimumSize(350,75)
+        
         
         # General layout for quiz window
         quiz_wnd_layout = QVBoxLayout()
