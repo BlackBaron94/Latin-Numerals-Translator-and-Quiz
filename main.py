@@ -7,6 +7,10 @@ from PyQt5.QtWidgets import QApplication
 
 
 def main():
+    """
+    Main function.
+    Runs the app creating main window.
+    """
 
     # Show main window on run    
     app = QApplication(sys.argv)

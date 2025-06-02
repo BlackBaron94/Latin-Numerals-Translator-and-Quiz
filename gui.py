@@ -7,9 +7,20 @@ from PyQt5.QtCore import Qt
 from logic import (quiz_streak, randomize, purify_input, lat2dec, 
     dec2lat)
 
-# This function grabs absolute path to where images are saved
-# so that images work for both .py and --onefile .exe executions
+
 def resource_path(relative_path):
+    """ 
+    This function grabs absolute path to where images are saved
+    so that images work for both .py and --onefile .exe executions
+    
+    
+    Args:
+        relative_path (str): Name of file in folder.
+    
+    Returns:
+        (str): Absolute path of file location during .exe decompression or .py run.
+    """
+    
     # If code is executed through PyInstaller --onefile
     try:
         # _MEIPASS is where .exe's files are temporarily 
@@ -27,6 +38,12 @@ def resource_path(relative_path):
 
 
 class MainWindow(QMainWindow):
+    """
+    Class for the main window of the GUI.
+    
+    Contains a "WELCOME" label, buttons for translator, rules, quiz and exiting, 
+    and a "Made by Black Baron" label.
+    """
     
     # Main window initialization
     def __init__(self):
@@ -92,8 +109,16 @@ class MainWindow(QMainWindow):
         
         self.setCentralWidget(widget)
         
-    # Main menu translatorBTN function    
+    
     def translatorBTN_clicked(self):
+        """
+        Main menu translator button function.
+        
+        Creates secondary window for translator.
+        Window displays translation flow, contains a button for reversing 
+        translation flow, an entry form to read input and a button to 
+        translate, and a field to display results.
+        """
         # Translator window
         self.translator_wnd = QWidget()
         self.translator_wnd.setWindowTitle("Translator")
@@ -179,8 +204,14 @@ class MainWindow(QMainWindow):
         self.translator_wnd.entry.setFocus()
         
         
-    # TranslateBTN in translator window
+    
     def translate_clicked(self):
+        """
+        Translate button in translator window.
+        
+        Reads user input, reads current flow of translation (lat2dec or dec2lat)
+        translates and updates result.
+        """
         user_input = self.translator_wnd.entry.text()
         self.translator_wnd.entry.setFocus()
         
@@ -220,8 +251,13 @@ class MainWindow(QMainWindow):
                 self.translator_wnd.output.setText('Invalid input')
         self.translator_wnd.entry.clear()
     
-    # ReverseBTN in translator window
+    
     def reverse_clicked(self, status):
+        """
+        Reverse button function in translator window.
+        
+        Reverses flow of translation and updates tags in window accordingly.
+        """
         if status:
             self.translator_wnd.entry_title.setText("Decimal Number")
             self.translator_wnd.output_title.setText("Latin Numeral")
@@ -233,8 +269,14 @@ class MainWindow(QMainWindow):
         self.translator_wnd.entry.clear()
         self.translator_wnd.entry.setFocus()
     
-    # Main menu RulesBTN function
+    
     def rulesBTN_clicked(self):
+        """
+        Main menu Rules button function.
+        
+        Creates a window containing values of Latin numerals and the rules of
+        writing Latin numerals.
+        """
         self.rules_wnd = QWidget()
         
         # Window Properties
@@ -375,8 +417,15 @@ M''')
         # Needs to update after scroll_area addition
         self.rules_wnd.numerals_title.updateGeometry()
     
-    # Main menu QuizBTN function
+    
     def quizBTN_clicked(self):
+        """
+        Main menu Quiz button function.
+        
+        Creates Quiz window with a random number in either Latin or Decimal,
+        an antry field and a check button, and a result field.
+        Displays correct answers streak after 5 consecutive correct answers.
+        """
         
         self.quiz_wnd = QWidget()
         # Window Properties
@@ -460,8 +509,14 @@ M''')
         self.quiz_wnd.setLayout(quiz_wnd_layout)
         self.quiz_wnd.show()
         
-    # Function for pressing quiz answerBTN        
+    
     def quiz_answerBTN(self):
+        """
+        Quiz window "Check" button function.
+        
+        Reads user input and displays results accordingly.
+        """
+        
         # Grabs entry text
         user_input = self.quiz_wnd.answer.text()
         
@@ -521,4 +576,9 @@ M''')
     
     
     def exitBTN_clicked(self):
+        """
+        Main window exit button function.
+        
+        Closes window and app.
+        """
         self.close()

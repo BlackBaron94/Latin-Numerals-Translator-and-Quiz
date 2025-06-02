@@ -10,7 +10,10 @@ class number:
         return self.decimal
 
 def initialize():
-    # Creates numerals classes and array
+    """
+    Creates global numerals classes and array containing each instance of
+    the class as well as initialization of the quiz_streak.
+    """
     i = number('I', 1)
     v = number('V', 5)
     x = number('X', 10)
@@ -26,7 +29,13 @@ def initialize():
     quiz_streak = 0
     
 def randomize():
-    # Decides Latin to Decimal or vice versa
+    """
+    Decides Latin to Decimal or vice versa.
+    
+    
+    Returns:
+        str: Random number in Latin or Decimal.
+    """
     random_type = randint(0,1)
     
     random_number = randint(0,3999)
@@ -40,8 +49,18 @@ def randomize():
     
     
 
-# Retains only latin numerals present in string
+
 def purify_input(input_string):
+    """
+    Retains only latin numerals present in string.
+    
+    
+    Args:
+        input_string(str): The string entered by the user.
+        
+    Returns:
+        str: Stripped string of all non latin numeral characters.
+    """
     purified_string = ''
     for letter in input_string:
         letter = str(letter).capitalize()
@@ -53,6 +72,16 @@ def purify_input(input_string):
     return purified_string
 
 def letter_conversion(letter):
+    """
+    Evaluates each Latin numeral to its decimal value
+    
+    
+    Args:
+        letter (str): The letter to be evaluated.
+        
+    Returns:
+        int: The value of letter passed.
+    """
     # Handles "None" case
     if letter:
         for y in numerals:
@@ -61,12 +90,37 @@ def letter_conversion(letter):
     else:
         return 0
     
-# Returns a list, 
-# [0] is a mistake flag    
-# If return array len = 2, [1] = VLD letter that was used in a wrong way
-# If return array len = 3, [1] = letter that doesn't have required 1/10 value
-# [2] = letter whose value is higher than [1] * 10.
+
 def lat2dec(my_num):
+    """
+    Translates a sequence of Latin numerals to their decimal value.
+    
+    
+    Args:
+        my_num (str): User input string.
+    
+    Returns:
+        list: The result list has one of the following formats:
+            
+            If input is valid:
+                [True, int]:
+                    [0] (boolean): Flag for correct input.
+                    [1] (int): Value of Latin numerals.
+            
+            If input is invalid:
+                [False, str]:
+                    [0] (boolean): Flag indicating error.
+                    [1] (str): The letter that was misused (V/L/D in this case).
+                    
+                or
+                
+                [False, str, str]:
+                    [0] (boolean): Flag indicating error.
+                    [1] (str): The misused character that is less than 1/10 
+                    of next character.
+                    [2] (str): The misused character that is more than [1] * 10.
+        
+    """
     my_num = purify_input(my_num)
     
     # If string doesn't contain any numerals
@@ -166,8 +220,20 @@ def lat2dec(my_num):
             
     return [True, my_sum]
 
-# Translates decimals to latin
+
 def dec2lat(my_num_str):
+    """
+    Translates decimals to latin.
+    
+    
+    Args:
+        my_num_str (str): A string of an integer.
+    
+    Returns:
+        str: The latin representation of the decimal number.
+        Returns False if input was not only decimal integers.
+    """
+    
     # Tries to get an integer out of input string
     try:
         my_num_int = int(my_num_str)
@@ -182,7 +248,7 @@ def dec2lat(my_num_str):
     # Grabs each digit by dividing seperately, if none, grabs 0
     # 1st iteration [0]/1000, 2nd [1]/100 etc
     for index in range(0,4):
-        # Division and addings digit
+        # Division and adding digit
         digits.append(int(my_num_int // divider))
         # Reduces main number by digit * place, e.g. if [0] was 4, then -4*1000
         my_num_int = my_num_int - digits[index] * divider
@@ -201,8 +267,20 @@ def dec2lat(my_num_str):
             latin += digit_conversion(digits, index)
     return latin
 
-# Converts a certain digit to the corresponding latin numeral(s)
+
 def digit_conversion(digits_array, digit_num):
+    """
+    Converts a certain digit to the corresponding latin numeral(s).
+    
+    
+    Args:
+        digits_array (list): A list containing all digits, including zeros.
+        digit_num (int): Index of number to be converted.
+    
+    Returns:
+        str: Latin numeral(s) corresponding to value of indexed number.
+    """
+    
     return_string = ''
     
     # digit 1 base value 100, 
