@@ -12,11 +12,12 @@ def main():
     Runs the app creating main window.
     """
 
-    # Show main window on run    
+    # Show main window on run
     app = QApplication(sys.argv)
     w = MainWindow()
     w.show()
     app.exec()
+
 
 if __name__ == "__main__":
     main()
