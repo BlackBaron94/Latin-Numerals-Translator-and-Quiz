@@ -2,3 +2,6 @@ __pycache__/
 L-Icon.ico
 main.spec
 venv/
+.coverage
+htmlcov/
+coverage.xml
