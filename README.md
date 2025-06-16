@@ -5,6 +5,9 @@
 
 
   <img src="https://github.com/BlackBaron94/Latin-Numerals-Translator-and-Quiz/actions/workflows/tests.yml/badge.svg" alt="Tests"/>
+  <a href="https://codecov.io/gh/BlackBaron94/Latin-Numerals-Translator-and-Quiz" > 
+  <img src="https://codecov.io/gh/BlackBaron94/Latin-Numerals-Translator-and-Quiz/graph/badge.svg?token=QXBRFLQ1JI"/> 
+  </a>
 
 
   <p align="center">
