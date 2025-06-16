@@ -11,10 +11,17 @@ class number:
         return self.decimal
 
 
-def initialize():
+def create_numerals_list():
     """
-    Creates global numerals classes and array containing each instance of
-    the class as well as initialization of the quiz_streak.
+    Creates numerals classes and array containing each instance of
+    the class.
+
+
+    Args:
+        None.
+
+    Returns:
+        list (number): A list of number class objects representing all numerals.
     """
     i = number("I", 1)
     v = number("V", 5)
@@ -23,12 +30,8 @@ def initialize():
     c = number("C", 100)
     d = number("D", 500)
     m = number("M", 1000)
-    global numerals
     numerals = [i, v, x, l, c, d, m]
-
-    # A nice correct guess global counter
-    global quiz_streak
-    quiz_streak = 0
+    return numerals
 
 
 def randomize():
@@ -73,9 +76,11 @@ def purify_input(input_string):
     return purified_string
 
 
-def letter_conversion(letter):
+def letter_conversion(
+    letter: str,
+) -> int:
     """
-    Evaluates each Latin numeral to its decimal value
+    Evaluates each Latin numeral to its decimal value.
 
 
     Args:
@@ -84,6 +89,7 @@ def letter_conversion(letter):
     Returns:
         int: The value of letter passed.
     """
+    numerals = create_numerals_list()
     # Handles "None" case
     if letter:
         for y in numerals:
@@ -124,10 +130,19 @@ def lat2dec(my_num):
 
     """
     my_num = purify_input(my_num)
-
     # If string doesn't contain any numerals
     if len(my_num) == 0:
         return [False, False]
+
+    # # Maximum length for consecutive M's ~ 15.000
+    current_milleniums = 15
+    for index in range(0, len(my_num)):
+        if my_num[index] != "M":
+            break
+        else:
+            current_milleniums -= 1
+    if current_milleniums < 1:
+        return [False, "M"]
 
     # Checks if same numeral appears more than 3 times
     same_letter = 0
@@ -149,7 +164,12 @@ def lat2dec(my_num):
         if int(current_value) in (500, 50, 5):
             i = index + 1
             while i <= len(my_num) - 1:
-                if my_num[index] == my_num[i]:
+                tested_value = letter_conversion(my_num[i])
+                # Checks for VIX scenarios, V L D aren't allowed to be
+                # followed by a greater value than themselves
+                if my_num[index] == my_num[i] or int(current_value) < int(
+                    tested_value
+                ):
                     return [False, my_num[index]]
                 i += 1
 
@@ -238,8 +258,10 @@ def dec2lat(my_num_str):
     # Tries to get an integer out of input string
     try:
         my_num_int = int(my_num_str)
-    # If input string contains non-decimals
-    except:
+        if my_num_int < 1 or my_num_int > 9999:
+            raise ValueError
+    # If input string contains non-decimals or negative numbers
+    except ValueError:
         return False
 
     # *THIS WORKS UP TO 3999*
@@ -256,6 +278,7 @@ def dec2lat(my_num_str):
         # Reduces divider for next iteration from 10^x to 10^x-1
         divider = divider / 10
 
+    numerals = create_numerals_list()
     # Thousands are calculated differently due to limitations
     # E.g. 4000 = MMMM instead of MV̅ due to character limitations
     if digits[0]:
@@ -295,6 +318,7 @@ def digit_conversion(digits_array, digit_num):
 
     # Subset to be used for this particular digit
     subset = []
+    numerals = create_numerals_list()
 
     # Subset[0] is base_value
     # Checks which numeral has the base value we're looking for, I/X/C
@@ -347,4 +371,136 @@ def digit_conversion(digits_array, digit_num):
     return return_string
 
 
-initialize()
+def handle_translation_input(user_input: str, direction: str) -> str:
+    """
+    Function that receives input to be translated entered in the translator
+    window, checks translation direction and translates or returns
+    relative error message. Translation handled either by lat2dec() or dec2lat.
+    Input is purified using purify_input() to redisplay in a decent manner in
+    result.
+
+
+    Args:
+        user_input (str): User input as gotten from UI
+        direction (str): Indicated direction of translation.
+
+    Returns:
+        str: String for message to be displayed, if input was valid it's the
+        translation of input, or in any other case a relative error message.
+    """
+    # Checks direction of translation
+    if direction == "Latin to Decimal":
+
+        result = lat2dec(user_input)
+
+        # Checks if string is free of mistakes
+        if result[0]:
+            # Purifies input to display correctly
+            purified_input = purify_input(str(user_input))
+            return "Result: " + str(purified_input + " is " + str(result[1]))
+
+        # String has mistakes
+        else:
+            # Checks secondary mistake flag (non numeral strings)
+            if not result[1]:
+                return "Invalid input"
+            # Main case of mistake, e.g. VV
+            elif len(result) == 2:
+                return "Invalid input,\n'" + result[1] + "' wrongfully used."
+
+            # Special case of rule #3 mistake
+            else:
+                return str(
+                    "Invalid input,\n'"
+                    + result[1]
+                    + "' wrongfully used before '"
+                    + result[2]
+                    + "'. \nCheck rule #3."
+                )
+
+    else:
+        result = dec2lat(user_input)
+        if result:
+            return "Result: " + str(user_input + " is " + str(result))
+        elif result == False:
+            return "Invalid input"
+
+
+def handle_quiz_input(
+    question_number: str, user_input: str, quiz_streak: int
+) -> tuple[str, int]:
+    """
+    Function that receives a quiz question number, the user's input and the
+    current quiz streak, checks if the correctness of user's input,
+    updates and returns quyz streak and prepares a message for the result to
+    display.
+
+
+    Args:
+        question_number (str): The number displayed as a quiz to be translated.
+        user_input (str): The answer the user has entered.
+        quiz_streak (int): Current correct quiz answers streak.
+
+    Returns:
+        tuple(str, int): Message to be displayed and updated quiz streak.
+    """
+
+    initial_input = user_input
+    # Checks if first string character is latin in question text
+    if question_number[0] in "IVXLCDM":
+        try:
+            # Double typecasting to get rid of starting 0s
+            user_input = str(int(user_input))
+        except ValueError:
+            # Sends relative message and resets quiz streak
+            return ("Invalid input. Please use decimals only.", 0)
+        correct_answer = lat2dec(question_number)
+        # lat2dec returns array, since question text is controlled
+        # it's always len = 2, [0] = True, [1] = *translation*
+        correct_answer = str(correct_answer[1])
+    else:
+        correct_answer = dec2lat(question_number)
+        # Purifies user's latin input
+        user_input = purify_input(user_input)
+    # If user input is latin, it's been purified so it matches perfectly
+    if user_input == correct_answer:
+
+        result_message = "Your answer is correct!\n{0} is {1}".format(
+            question_number, user_input
+        )
+        # Adds +1 to correct streak
+        quiz_streak += 1
+
+        # Displays streak # and a message for high correct streaks
+        if quiz_streak > 19:
+            result_message = (
+                result_message
+                + "\n"
+                + str(quiz_streak)
+                + " correct answers streak!!! \nYou're on FIRE!!!"
+            )
+
+        elif quiz_streak > 9:
+            result_message = (
+                result_message
+                + "\n"
+                + str(quiz_streak)
+                + " correct answers streak!! \nYou're on a roll!!"
+            )
+        elif quiz_streak > 4:
+            result_message = (
+                result_message
+                + "\n"
+                + str(quiz_streak)
+                + " correct answers streak!"
+            )
+        return (result_message, quiz_streak)
+    # Answer was incorrect
+    else:
+        # Shows input's correct answer as opposed to user's wrong answer
+        result_message = "Your answer is wrong.\n{0} is {1}, not '{2}'".format(
+            question_number, correct_answer, initial_input
+        )
+        # Resets correct streak
+        quiz_streak = 0
+        return (result_message, quiz_streak)

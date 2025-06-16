@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 from PyQt5.QtCore import Qt
-from logic import quiz_streak, randomize, purify_input, lat2dec, dec2lat
+from logic import randomize, handle_translation_input, handle_quiz_input
 
 
 def resource_path(relative_path):
@@ -56,6 +56,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Initializing quiz streak property
+        self.quiz_streak = 0
+
         # Window Properties
         self.setWindowTitle("Menu")
         self.setWindowIcon(QIcon(resource_path("L-Icon.png")))
@@ -73,24 +76,24 @@ class MainWindow(QMainWindow):
         label.setMinimumSize(350, 50)
 
         # Buttons
-        translatorBTN = QPushButton("Numerals Translator")
-        translatorBTN.clicked.connect(self.translatorBTN_clicked)
+        translator_btn = QPushButton("Numerals Translator")
+        translator_btn.clicked.connect(self.on_translator_btn_clicked)
 
-        rulesBTN = QPushButton("Numerals Rules")
-        rulesBTN.clicked.connect(self.rulesBTN_clicked)
+        rules_btn = QPushButton("Numerals Rules")
+        rules_btn.clicked.connect(self.on_rules_btn_clicked)
 
-        quizBTN = QPushButton("Quiz")
-        quizBTN.clicked.connect(self.quizBTN_clicked)
+        quiz_btn = QPushButton("Quiz")
+        quiz_btn.clicked.connect(self.on_quiz_btn_clicked)
 
-        exitBTN = QPushButton("Exit")
-        exitBTN.clicked.connect(self.exitBTN_clicked)
+        exit_btn = QPushButton("Exit")
+        exit_btn.clicked.connect(self.on_exit_btn_clicked)
 
         # Made_by_label
         made_by_label = QLabel("Made by Black Baron")
         font.setPointSize(12)
         made_by_label.setFont(font)
 
-        allBTNS = [translatorBTN, rulesBTN, quizBTN, exitBTN]
+        all_btns = [translator_btn, rules_btn, quiz_btn, exit_btn]
 
         font.setPointSize(16)
         font.setFamily("Times New Roman")
@@ -100,7 +103,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(label)
 
         # Modifying and adding buttons
-        for btn in allBTNS:
+        for btn in all_btns:
             btn.setFixedWidth(230)
             btn.setFont(font)
             layout.addWidget(btn, alignment=Qt.AlignCenter)
@@ -113,7 +116,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(widget)
 
-    def translatorBTN_clicked(self):
+    def on_translator_btn_clicked(self):
         """
         Main menu translator button function.
 
@@ -140,14 +143,16 @@ class MainWindow(QMainWindow):
             Qt.AlignRight | Qt.AlignVCenter
         )
 
-        # Reverse translation BTN
-        self.translator_wnd.reverseBTN = QPushButton()
-        self.translator_wnd.reverseBTN.setCheckable(True)
-        self.translator_wnd.reverseBTN.setIcon(
+        # Reverse translation btn
+        self.translator_wnd.reverse_btn = QPushButton()
+        self.translator_wnd.reverse_btn.setCheckable(True)
+        self.translator_wnd.reverse_btn.setIcon(
             QIcon(resource_path("arrows.png"))
         )
-        self.translator_wnd.reverseBTN.clicked.connect(self.reverse_clicked)
-        self.translator_wnd.reverseBTN.setMinimumSize(30, 30)
+        self.translator_wnd.reverse_btn.clicked.connect(
+            self.on_reverse_clicked
+        )
+        self.translator_wnd.reverse_btn.setMinimumSize(30, 30)
 
         # Translate TO side
         self.translator_wnd.output_title = QLabel("Decimal Number")
@@ -161,7 +166,7 @@ class MainWindow(QMainWindow):
         # Upper line, from + reverse + to
         central_upper_layout = QHBoxLayout()
         central_upper_layout.addWidget(self.translator_wnd.entry_title)
-        central_upper_layout.addWidget(self.translator_wnd.reverseBTN)
+        central_upper_layout.addWidget(self.translator_wnd.reverse_btn)
         central_upper_layout.addWidget(self.translator_wnd.output_title)
         central_upper_layout.setAlignment(Qt.AlignCenter)
 
@@ -171,19 +176,19 @@ class MainWindow(QMainWindow):
         self.translator_wnd.entry.setAlignment(Qt.AlignHCenter)
         self.translator_wnd.entry.setMinimumSize(245, 30)
 
-        # TranslateBTN
-        self.translator_wnd.translateBTN = QPushButton("Translate")
-        self.translator_wnd.translateBTN.setFont(font)
-        self.translator_wnd.translateBTN.setShortcut("Return")
-        self.translator_wnd.translateBTN.clicked.connect(
-            self.translate_clicked
+        # translate_btn
+        self.translator_wnd.translate_btn = QPushButton("Translate")
+        self.translator_wnd.translate_btn.setFont(font)
+        self.translator_wnd.translate_btn.setShortcut("Return")
+        self.translator_wnd.translate_btn.clicked.connect(
+            self.on_translate_clicked
         )
-        self.translator_wnd.translateBTN.setMinimumSize(100, 30)
+        self.translator_wnd.translate_btn.setMinimumSize(100, 30)
 
         # Middle line, field + BTN
         middle_layout = QHBoxLayout()
         middle_layout.addWidget(self.translator_wnd.entry)
-        middle_layout.addWidget(self.translator_wnd.translateBTN)
+        middle_layout.addWidget(self.translator_wnd.translate_btn)
         middle_layout.setAlignment(Qt.AlignCenter)
         middle_layout.setSpacing(7)
 
@@ -213,12 +218,13 @@ class MainWindow(QMainWindow):
         # FYI general .show() focus is highest placed Widget
         self.translator_wnd.entry.setFocus()
 
-    def translate_clicked(self):
+    def on_translate_clicked(self):
         """
-        Translate button in translator window.
-
-        Reads user input, reads current flow of translation (lat2dec or dec2lat)
-        translates and updates result.
+        Translate button in translator window. Takes user input, checks if it's
+        not empty, checks current translation direction and calls
+        handle_translation_input() to get a message to display, either the
+        translation of the input or a relative "input error" message,
+        indicating the mistake in the input.
         """
         user_input = self.translator_wnd.entry.text()
         self.translator_wnd.entry.setFocus()
@@ -229,47 +235,16 @@ class MainWindow(QMainWindow):
 
         # Checks what it must translate *FROM*
         if self.translator_wnd.entry_title.text() == "Latin Numeral":
-
-            result = lat2dec(user_input)
-
-            # Checks if string is free of mistakes
-            if result[0]:
-                # Purifies input to display correctly
-                purified_input = purify_input(str(user_input))
-                self.translator_wnd.output.setText(
-                    "Result: " + str(purified_input + " is " + str(result[1]))
-                )
-            # String has mistakes
-            else:
-                # Checks secondary mistake flag (non numeral strings)
-                if not result[1]:
-                    self.translator_wnd.output.setText("Invalid input")
-                # Main case of mistake
-                elif len(result) == 2:
-                    self.translator_wnd.output.setText(
-                        "Invalid input,\n'" + result[1] + "' wrongfully used."
-                    )
-                # Special case of rule #3 mistake
-                else:
-                    self.translator_wnd.output.setText(
-                        "Invalid input,\n'"
-                        + result[1]
-                        + "' wrongfully used before '"
-                        + result[2]
-                        + "'. \nCheck rule #3."
-                    )
-
+            direction = "Latin to Decimal"
         else:
-            result = dec2lat(user_input)
-            if result:
-                self.translator_wnd.output.setText(
-                    "Result: " + str(user_input + " is " + str(result))
-                )
-            elif result == False:
-                self.translator_wnd.output.setText("Invalid input")
+            direction = "Decimal to Latin"
+
+        message = handle_translation_input(user_input, direction)
+
+        self.translator_wnd.output.setText(message)
         self.translator_wnd.entry.clear()
 
-    def reverse_clicked(self, status):
+    def on_reverse_clicked(self, status):
         """
         Reverse button function in translator window.
 
@@ -288,7 +263,7 @@ class MainWindow(QMainWindow):
         self.translator_wnd.entry.clear()
         self.translator_wnd.entry.setFocus()
 
-    def rulesBTN_clicked(self):
+    def on_rules_btn_clicked(self):
         """
         Main menu Rules button function.
 
@@ -438,7 +413,7 @@ M"""
         # Needs to update after scroll_area addition
         self.rules_wnd.numerals_title.updateGeometry()
 
-    def quizBTN_clicked(self):
+    def on_quiz_btn_clicked(self):
         """
         Main menu Quiz button function.
 
@@ -491,7 +466,9 @@ M"""
         # Register answer BTN
         self.quiz_wnd.register_answer = QPushButton("Check")
         self.quiz_wnd.register_answer.setFont(font)
-        self.quiz_wnd.register_answer.clicked.connect(self.quiz_answerBTN)
+        self.quiz_wnd.register_answer.clicked.connect(
+            self.on_quiz_answer_btn_clicked
+        )
         self.quiz_wnd.register_answer.setShortcut("Return")
 
         # Box with entry + BTN
@@ -529,11 +506,10 @@ M"""
         self.quiz_wnd.setLayout(quiz_wnd_layout)
         self.quiz_wnd.show()
 
-    def quiz_answerBTN(self):
+    def on_quiz_answer_btn_clicked(self):
         """
-        Quiz window "Check" button function.
-
-        Reads user input and displays results accordingly.
+        Quiz window "Check" button function. If user input is empty, clears it
+        and returns. Calls handle_quiz_input() to display the relative result.
         """
 
         # Grabs entry text
@@ -545,73 +521,18 @@ M"""
             self.quiz_wnd.answer.setFocus()
             return
 
-        # Retains initial input before purify to show user
-        # their entry when wrong
-        initial_input = user_input
-
-        # Checks if first string character is latin in question text
-        if self.quiz_wnd.question_number.text()[0] in "IVXLCDM":
-            correct_answer = lat2dec(self.quiz_wnd.question_number.text())
-            # lat2dec returns array, since question text is controlled
-            # it's always len = 2, [0] = True, [1] = *translation*
-            correct_answer = str(correct_answer[1])
-        else:
-            # Purifies user's latin input
-            user_input = purify_input(user_input)
-            correct_answer = dec2lat(self.quiz_wnd.question_number.text())
-
-        # If user input is latin, it's been purified so it matches perfectly
-        if user_input == correct_answer:
-
-            self.quiz_wnd.result.setText(
-                "Your answer is correct!\n{0} is {1}".format(
-                    self.quiz_wnd.question_number.text(), user_input
-                )
-            )
-            # Adds +1 to correct streak
-            global quiz_streak
-            quiz_streak += 1
-
-        else:
-            # Shows input's correct answer as opposed to user's wrong answer
-            self.quiz_wnd.result.setText(
-                "Your answer is wrong.\n{0} is {1}, not '{2}'".format(
-                    self.quiz_wnd.question_number.text(),
-                    correct_answer,
-                    initial_input,
-                )
-            )
-            # Resets correct streak
-            quiz_streak = 0
+        # Saves result to be displayed and current quiz streak
+        result, self.quiz_streak = handle_quiz_input(
+            self.quiz_wnd.question_number.text(), user_input, self.quiz_streak
+        )
+        self.quiz_wnd.result.setText(result)
+        # Reroll a quiz number
         self.quiz_wnd.question_number.setText(randomize())
-
-        # Displays streak # and a message for high correct streaks
-        if quiz_streak > 19:
-            self.quiz_wnd.result.setText(
-                self.quiz_wnd.result.text()
-                + "\n"
-                + str(quiz_streak)
-                + " correct answers streak!!! \nYou're on FIRE!!!"
-            )
-        elif quiz_streak > 9:
-            self.quiz_wnd.result.setText(
-                self.quiz_wnd.result.text()
-                + "\n"
-                + str(quiz_streak)
-                + " correct answers streak!! \nYou're on a roll!!"
-            )
-        elif quiz_streak > 4:
-            self.quiz_wnd.result.setText(
-                self.quiz_wnd.result.text()
-                + "\n"
-                + str(quiz_streak)
-                + " correct answers streak!"
-            )
 
         self.quiz_wnd.answer.clear()
         self.quiz_wnd.answer.setFocus()
 
-    def exitBTN_clicked(self):
+    def on_exit_btn_clicked(self):
         """
         Main window exit button function.
 

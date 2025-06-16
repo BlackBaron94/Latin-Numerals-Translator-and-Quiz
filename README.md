@@ -1,6 +1,11 @@
 <a id="readme-top"></a>
+
 <div align="center">
   <h1 align="center">Latin Numeral Translator and Quiz</h1>
+
+
+  <img src="https://github.com/BlackBaron94/Latin-Numerals-Translator-and-Quiz/actions/workflows/tests.yml/badge.svg" alt="Tests"/>
+
 
   <p align="center">
     Ένα project που μεταφράζει λατινικούς αριθμούς, δείχνει την αντιστοίχιση των αριθμών και τους κανόνες σύνταξης λατινικών αριθμών, 
@@ -29,7 +34,16 @@
 
 * [![Python][python.org]][Python-url]
 * [![PyQt5][PyQt5.python]][PyQt5-url]
+* [![PyInstaller][PyInstaller]][PyInstaller-url]
+* Github Actions (CI testing pipeline)
 
+### CI/CD
+
+Το project χρησιμοποιεί [GitHub Actions](https://github.com/features/actions) για την αυτοματοποιημένη εκτέλεση δοκιμών (tests) σε κάθε αλλαγή στον κώδικα (push ή pull request στο main branch).
+
+Ορίζεται στο αρχείο `.github/workflows/tests.yml` και περιλαμβάνει αυτόματη εγκατάσταση dependencies και εκτέλεση των tests με `pytest`.
+
+Το badge στο πάνω μέρος δείχνει την τρέχουσα κατάσταση των tests.
 
 ### Αρχεία του Project
 
@@ -191,3 +205,4 @@ Project Link: [Latin Numerals Translator and Quiz](https://github.com/BlackBaron
 [python-url]: https://python.org/
 [PyQt5.python]: https://img.shields.io/badge/-PyQt-004400?style=flat&logo=Qt
 [PyQt5-url]: https://pypi.org/project/PyQt5/
+[PyInstaller-url]: https://pyinstaller.org/
