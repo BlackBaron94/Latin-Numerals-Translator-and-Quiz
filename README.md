@@ -208,7 +208,6 @@ Project Link: [Latin Numerals Translator and Quiz](https://github.com/BlackBaron
 [python-url]: https://python.org/
 [PyQt5.python]: https://img.shields.io/badge/-PyQt-004400?style=flat&logo=Qt
 [PyQt5-url]: https://pypi.org/project/PyQt5/
-[PyInstaller.icon]: https://www.vhv.rs/dpng/d/208-2081211_images-pyinstaller-draft2b-windowed-pyinstaller-logo-hd-png.png
 [PyInstaller-url]: https://pyinstaller.org/
 [GithubActions.icon]: https://static-00.iconduck.com/assets.00/githubactions-icon-2048x2048-ipqow27x.png
 [GithubActions-url]: https://github.com/features/actions
