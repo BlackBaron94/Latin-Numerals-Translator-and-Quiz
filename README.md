@@ -35,10 +35,10 @@
 
 ### Τεχνολογίες και βιβλιοθήκες που χρησιμοποιήθηκαν
 
-* [![Python][python.org]][Python-url]
-* [![PyQt5][PyQt5.python]][PyQt5-url] PyQt5 
-* [<img src="https://avatars.githubusercontent.com/u/1215332?v=4" alt="PyInstaller_Logo" width="40" />][PyInstaller-url] PyInstaller
-* [<img src="https://static-00.iconduck.com/assets.00/githubactions-icon-2048x2048-ipqow27x.png" alt="GithubActions_Logo" width="40" />][GitHubActions-url] GithubActions (CI testing pipeline)
+* [![Python][Python-icon]][Python-url]
+* [![PyQt5][PyQt5-icon]][PyQt5-url] 
+* [<img src="https://avatars.githubusercontent.com/u/1215332?v=4" alt="PyInstaller_Logo" width="30" />][PyInstaller-url] PyInstaller
+* [![GitHubActions][GitHubActions-icon]][GitHubActions-url]
 
 ### CI/CD
 
@@ -204,10 +204,10 @@ Project Link: [Latin Numerals Translator and Quiz](https://github.com/BlackBaron
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
-[python-url]: https://python.org/
-[PyQt5.python]: https://img.shields.io/badge/-PyQt-004400?style=flat&logo=Qt
+[Python-icon]: https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&style=plastic
+[Python-url]: https://python.org/
+[PyQt5-icon]: https://img.shields.io/badge/-PyQt5-004400?style=flat&logo=Qt&style=plastic
 [PyQt5-url]: https://pypi.org/project/PyQt5/
 [PyInstaller-url]: https://pyinstaller.org/
-[GithubActions.icon]: https://static-00.iconduck.com/assets.00/githubactions-icon-2048x2048-ipqow27x.png
-[GithubActions-url]: https://github.com/features/actions
+[GitHubActions-icon]: https://img.shields.io/badge/%20-GitHubActions-black?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic
+[GitHubActions-url]: https://github.com/features/actions
