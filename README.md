@@ -36,10 +36,13 @@
 
 ### Τεχνολογίες και βιβλιοθήκες που χρησιμοποιήθηκαν
 
-* [![Python][Python-icon]][Python-url]
-* [![PyQt5][PyQt5-icon]][PyQt5-url] 
-* <a href="https://pyinstaller.org/"><img src="https://raw.githubusercontent.com/BlackBaron94/images/main/PyInstaller-Logo.png" width="20" alt="PyInstaller Logo" style="vertical-align:middle; margin-right:8px;" /></a>[![PyInstaller][PyInstaller-icon]][PyInstaller-url]
-* [![GitHubActions][GitHubActions-icon]][GitHubActions-url]
+<a href="https://python.org/"> <img src="https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&style=plastic" alt="Python-logo" width=120px/></a>
+
+<a href="https://pypi.org/project/PyQt5/"> <img src="https://img.shields.io/badge/-PyQt5-004400?style=flat&logo=Qt&style=plastic" alt="PyQt5-Logo" width=100px/></a>
+
+<a href="https://pyinstaller.org/"><img src="https://raw.githubusercontent.com/BlackBaron94/images/main/PyInstaller-Logo.png" alt="PyInstaller-Logo" width=37px/><img src="https://img.shields.io/badge/PyInstaller-23364D" alt="PyInstaller-Logo-Text" width=120px/></a>
+
+<a href="https://github.com/features/actions"> <img src="https://img.shields.io/badge/%20-GitHubActions-0A1F44?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic" alt="GitHubActions-Logo" width=223px height=39px/></a>
 
 ### CI/CD
 
@@ -213,11 +216,3 @@ This project is licensed under the MIT License – see the [LICENSE](./LICENSE) 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[Python-icon]: https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&style=plastic
-[Python-url]: https://python.org/
-[PyQt5-icon]: https://img.shields.io/badge/-PyQt5-004400?style=flat&logo=Qt&style=plastic
-[PyQt5-url]: https://pypi.org/project/PyQt5/
-[PyInstaller-icon]: https://img.shields.io/badge/PyInstaller-23364D
-[PyInstaller-url]: https://pyinstaller.org/
-[GitHubActions-icon]: https://img.shields.io/badge/%20-GitHubActions-0A1F44?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic
-[GitHubActions-url]: https://github.com/features/actions
