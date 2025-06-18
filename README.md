@@ -209,5 +209,5 @@ Project Link: [Latin Numerals Translator and Quiz](https://github.com/BlackBaron
 [PyQt5-icon]: https://img.shields.io/badge/-PyQt5-004400?style=flat&logo=Qt&style=plastic
 [PyQt5-url]: https://pypi.org/project/PyQt5/
 [PyInstaller-url]: https://pyinstaller.org/
-[GitHubActions-icon]: https://img.shields.io/badge/%20-GitHubActions-black?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic
+[GitHubActions-icon]: https://img.shields.io/badge/%20-GitHubActions-0A1F44?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic
 [GitHubActions-url]: https://github.com/features/actions
