@@ -38,7 +38,7 @@
 
 * [![Python][Python-icon]][Python-url]
 * [![PyQt5][PyQt5-icon]][PyQt5-url] 
-* [<img src="https://avatars.githubusercontent.com/u/1215332?v=4" alt="PyInstaller_Logo" width="30" />][PyInstaller-url] PyInstaller
+* <a href="https://pyinstaller.org/"><img src="https://raw.githubusercontent.com/BlackBaron94/images/main/PyInstaller-Logo.png" width="20" alt="PyInstaller Logo" style="vertical-align:middle; margin-right:8px;" /></a>[![PyInstaller][PyInstaller-icon]][PyInstaller-url]
 * [![GitHubActions][GitHubActions-icon]][GitHubActions-url]
 
 ### CI/CD
@@ -217,6 +217,7 @@ This project is licensed under the MIT License – see the [LICENSE](./LICENSE) 
 [Python-url]: https://python.org/
 [PyQt5-icon]: https://img.shields.io/badge/-PyQt5-004400?style=flat&logo=Qt&style=plastic
 [PyQt5-url]: https://pypi.org/project/PyQt5/
+[PyInstaller-icon]: https://img.shields.io/badge/PyInstaller-23364D
 [PyInstaller-url]: https://pyinstaller.org/
 [GitHubActions-icon]: https://img.shields.io/badge/%20-GitHubActions-0A1F44?logo=githubactions&logoColor=2088FF-GitHubActions&style=plastic
 [GitHubActions-url]: https://github.com/features/actions
