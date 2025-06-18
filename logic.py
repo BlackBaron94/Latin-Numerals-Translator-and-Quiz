@@ -36,7 +36,8 @@ def create_numerals_list():
 
 def randomize():
     """
-    Decides Latin to Decimal or vice versa.
+    Decides Latin to Decimal or vice versa, rolls a random number from 1 to
+    3.999.
 
 
     Returns:
@@ -44,7 +45,7 @@ def randomize():
     """
     random_type = randint(0, 1)
 
-    random_number = randint(0, 3999)
+    random_number = randint(1, 3999)
     # 0 == Requests Decimal to Latin
     if random_type:
         return str(random_number)
